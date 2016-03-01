@@ -5,10 +5,8 @@
 <body>
 
 <h1> T1.p1: Chat de texto </h1>
-<ul>
-%for (n, m) in messages:
-    <li> <b>{{n}}: </b> {{m}} </li>
-%end
+<ul id="messages">
+
 </ul>
 
 <form action="/send" method=POST>
@@ -17,6 +15,14 @@
     <p> <input value="Enviar" type="submit" /> </p>
 </form>
 
+<script type="text/javascript" src="/static/jquery.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$.get('/messages', function(response){
+			$('#messages').html(response);
+		});
+	})
+</script>
 </body>
 
 </html>

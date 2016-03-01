@@ -1,12 +1,20 @@
-from bottle import run, get, post, view, request, redirect
+from bottle import run, get, post, view, request, redirect, route, static_file
+
 
 messages = [("Nobody", "Hello!")]
 nick = "Nobody"
+
 
 @get('/')
 @view('index')
 def index():
     return {'messages': messages, 'nick': nick}
+
+
+@get('/messages')
+@view('messages')
+def index():
+	return {'messages': messages, 'nick': nick}
 
 
 @post('/send')
@@ -19,4 +27,9 @@ def sendMessage():
     redirect('/')
 
 
-run(host='localhost', port=8080)
+@route('/static/<path:path>')
+def send_static(path):
+    return static_file(path, root='static')
+
+
+run(host='localhost', port=8000, debug=True)
