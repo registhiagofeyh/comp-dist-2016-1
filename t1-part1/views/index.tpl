@@ -18,10 +18,16 @@
 <script type="text/javascript" src="/static/jquery.js"></script>
 <script type="text/javascript">
 	$(function() {
+		update()
+	});
+
+	function update() {
 		$.get('/messages', function(response){
 			$('#messages').html(response);
 		});
-	})
+		
+		window.setTimeout(update, 500)
+	}
 </script>
 </body>
 
