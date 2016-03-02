@@ -2,29 +2,28 @@ from bottle import run, get, post, view, request, redirect, route, static_file
 
 
 messages = [("Nobody", "Hello!")]
-nick = "Nobody"
 
 
-@get('/')
+@route('/')
+@route('/<name>')
+@route('/<name>/')
 @view('index')
-def index():
-    return {'messages': messages, 'nick': nick}
+def index(name='Nobody'):
+    return {'nick': name}
 
 
 @get('/messages')
 @view('messages')
 def index():
-	return {'messages': messages, 'nick': nick}
+	return {'messages': messages}
 
 
 @post('/send')
 def sendMessage():
-    global nick
     m = request.forms.get('message')
     n = request.forms.get('nick')
     messages.append([n, m])
-    nick = n
-    redirect('/')
+    redirect('/' + n)
 
 
 @route('/static/<path:path>')
