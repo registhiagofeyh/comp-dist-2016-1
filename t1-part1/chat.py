@@ -31,4 +31,4 @@ def send_static(path):
     return static_file(path, root='static')
 
 
-run(host='localhost', port=8000, debug=True)
+run(host='localhost', port=8000)

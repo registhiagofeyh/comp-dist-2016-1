@@ -22,11 +22,9 @@
 	});
 
 	function update() {
-		$.get('/messages', function(response){
-			$('#messages').html(response);
-		});
-		
-		window.setTimeout(update, 500)
+		$('#messages').load('/messages');
+
+		window.setTimeout(update, 1000)
 	}
 </script>
 </body>
