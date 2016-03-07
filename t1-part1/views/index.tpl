@@ -24,7 +24,7 @@
 	function update() {
 		$('#messages').load('/messages');
 
-		window.setTimeout(update, 1000)
+		window.setTimeout(update, 5000)
 	}
 </script>
 </body>
