@@ -14,8 +14,6 @@ def connectServer(url, messages, peers):
 
 		except requests.exceptions.ConnectionError:
 			time.sleep(1/100)
-			#print('Impossivel connectar')
-
 
 def mergeMessages(messages, new):
 	for m in new:
