@@ -7,7 +7,7 @@ def syncMessages(messages, peers):
 		time.sleep(1/2)
 		try:
 			for url in peers:
-				r = requests.get(url + '/messages/json')
+				r = requests.post(url + '/messages')
 				mergeMessages(messages, r.json())
 		except requests.exceptions.ConnectionError:
 			time.sleep(1/100)

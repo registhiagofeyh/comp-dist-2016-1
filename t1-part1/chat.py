@@ -25,7 +25,7 @@ def index():
 	return {'messages': messages}
 
 
-@get('/messages/json')
+@post('/messages')
 def jsonmsgs():
 	global messages
 	return json.dumps(messages)
