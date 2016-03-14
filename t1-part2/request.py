@@ -3,14 +3,16 @@ import time
 import json
 
 def syncMessages(messages, peers):
-	while(1):
+	while True:
 		time.sleep(1/2)
-		try:
-			for url in peers:
+		for url in peers:
+			print('Request messages to ' + url + '/messages')
+			try:
 				r = requests.post(url + '/messages')
 				mergeMessages(messages, r.json())
-		except requests.exceptions.ConnectionError:
-			time.sleep(1/100)
+			except requests.exceptions.ConnectionError:
+				time.sleep(1/100)
+
 
 def mergeMessages(messages, new):
 	for m in new:

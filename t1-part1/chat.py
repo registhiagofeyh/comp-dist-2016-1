@@ -4,7 +4,8 @@ import threading
 import json
 
 sys.path.append('../t1-part2/')
-from request import syncMessages
+from request import *
+from peers import *
 
 ID = 0
 port = 0
@@ -31,6 +32,24 @@ def jsonmsgs():
 	return json.dumps(messages)
 
 
+@get('/peers/<url>')
+def jsonpeers(url):
+	global peers
+	global port
+	if not unpackURL(url) in peers:
+		peers.append(unpackURL(url))
+	temp = list(peers)
+	if port > 0:
+		temp.append('http://localhost:' + str(port))
+	return json.dumps(temp)
+
+
+@get('/debug')
+def debug():
+	global peers
+	return json.dumps(peers)
+
+
 @post('/send')
 def sendMessage():
 	global ID, port
@@ -45,13 +64,20 @@ def sendMessage():
 def send_static(path):
 	return static_file(path, root='static')
 
+
 for a in sys.argv:
 	if a == 'chat.py' or a == sys.argv[1]: continue
 	peers.append('http://localhost:' + a)
 
+
 threading.Thread(target = syncMessages,
 	args=[messages, peers]).start()
 
+
 port = int(sys.argv[1])
+threading.Thread(target = syncPeers,
+	args=[peers, 'http://localhost:' + str(port)]).start()
+
+
 run(host='localhost', port=port)
 
