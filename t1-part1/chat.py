@@ -9,7 +9,7 @@ from peers import *
 
 ID = 0
 port = 0
-messages = [(ID, "Nobody", "Hello!")]
+messages = []
 peers = []
 
 @route('/')

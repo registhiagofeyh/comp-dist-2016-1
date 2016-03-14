@@ -4,7 +4,7 @@
 
 <body>
 
-<h1> T1.p1: Chat de texto </h1>
+<h1> T1.p1: Chat de texto <small id="status" style="font-size: 50%;">| <span style="color: lime;">Online</span></small></h1>
 <ul id="messages">
 
 </ul>
@@ -22,7 +22,15 @@
 	});
 
 	function update() {
-		$('#messages').load('/messages');
+		$('#messages').load('/messages', function( response, status, xhr ) {
+			if (status == 'error') {
+				$('#status > span').css({color: 'red'}).text('Offline');
+				$('form input').attr('disabled', 'disabled');
+			} else {
+				$('#status > span').css({color: 'green'}).text('Online');
+				$('form input').removeAttr('disabled');
+			}
+		});
 
 		window.setTimeout(update, 1000)
 	}
