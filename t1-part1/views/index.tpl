@@ -15,19 +15,23 @@
     <p> <input value="Enviar" type="submit" /> </p>
 </form>
 
+<link rel="stylesheet" type="text/css" href="/static/style.css">
 <script type="text/javascript" src="/static/jquery.js"></script>
 <script type="text/javascript">
 	$(function() {
 		update()
 	});
 
+	var link = 1;
 	function update() {
 		$('#messages').load('/messages', function( response, status, xhr ) {
-			if (status == 'error') {
-				$('#status > span').css({color: 'red'}).text('Offline');
+			if (status == 'error' && link) {
+				link = 0;
+				$('#status > span').css({color: 'red'}).text('Offline').addClass('blink_me');
 				$('form input').attr('disabled', 'disabled');
-			} else {
-				$('#status > span').css({color: 'green'}).text('Online');
+			} else if (status != 'error' && !link) {
+				link = 1;
+				$('#status > span').css({color: 'green'}).text('Online').removeClass('blink_me');
 				$('form input').removeAttr('disabled');
 			}
 		});
