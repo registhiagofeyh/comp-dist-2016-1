@@ -5,14 +5,16 @@ Os exemplos estao escritos usando python, o framework web bottle e o pacote requ
 
 ## Trabalho 1
 O trabalho 1 sincroniza mensagens entre vários servidores automaticamente. 
+
 Vá até a pasta ```/t1-part1/``` para abrir o servidor e os clientes de sincronização.
+
 Na inicialização é necessário informar a porta de pelo menos um servidor conhecido:
 ```bash
 python3 chat.py 8000 8001
 ```
 O primeiro número é a porta onde será instanciado o servidor, o segundo número é a porta do servidor conhecido.
 
-Para acessar o chat, abra no navegador o endereço ```http://localhost:8000```
+Para acessar o chat, abra no navegador o endereço ```http://localhost:8000```.
 
 Após enviar a primeira mensagem o nome utilizado será o nick para o envio das próximas mensagens automaticamente.
 
