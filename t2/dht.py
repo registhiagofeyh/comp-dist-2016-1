@@ -43,7 +43,9 @@ class DHT:
     def __repr__(self):
         return "<<DHT:"+ repr(self.h) +">>"
 
-dht = DHT(md5(str(gmtime()).encode()).hexdigest()[:6])
+init_hash = md5(str(gmtime()).encode()).hexdigest()[:6]
+print("Inicializando DHT com hash: " + init_hash)
+dht = DHT(init_hash)
 
 @get('/dht/<key>')
 def dht_lookup(key):
