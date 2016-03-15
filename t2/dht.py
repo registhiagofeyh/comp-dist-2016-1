@@ -1,6 +1,8 @@
 from bottle import run, get, put
 import json
 import sys
+from hashlib import md5
+from time import gmtime
 
 
 # BUGLIST
@@ -41,7 +43,7 @@ class DHT:
     def __repr__(self):
         return "<<DHT:"+ repr(self.h) +">>"
 
-dht = DHT(sys.argv[2])
+dht = DHT(md5(str(gmtime()).encode()).hexdigest()[:6])
 
 @get('/dht/<key>')
 def dht_lookup(key):
