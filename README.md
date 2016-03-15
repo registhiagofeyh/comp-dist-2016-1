@@ -28,3 +28,9 @@ As seguintes requisições foram implementadas:
 * ```POST /send```: Adiciona uma nova mensagem
 * ```GET /static/<file>```: Busca um arquivo estático do servidor ```Ex: jquery.js```
 
+## Trabalho 2
+```bash
+$ curl -w "\n" -X GET "http://localhost:8080/dht/abcd1234"
+$ curl -w "\n" -X PUT "http://localhost:8080/dht/abcd1234/1234"
+$ curl -w "\n" -X GET "http://localhost:8080/dht/abcd1234"
+```
