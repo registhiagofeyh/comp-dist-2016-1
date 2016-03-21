@@ -23,25 +23,40 @@ class DHT:
             self.h[sk] = None
 
 
+    def getNotEmptySK(self, dht):
+        r = []
+        for sk in dht.h:
+            if dht.h[sk] is not None:
+                r.insert(r.__len__(), sk)
+        return r
+
+
     def insert(self, k, v):
         print('Tentando inserir ' + k + ': ' + v)
         for sk in subkeys(k):
             if sk in self.h:
                 if not self.h[sk]:
-                    if self.lookup(k) == None:
+                    if self.lookup(k, True) == None:
                         self.h[sk] = (k, v)
                         print('Inserido em [' + sk + ']')
                         return sk
         return None
 
 
-    def lookup(self, k):
+    def lookup(self, k, local = False):
         for sk in subkeys(k):
             if sk in self.h:
                 if self.h[sk]:
                     (ki, vi) = self.h[sk]
                     if ki == k:
                         return vi
+        if not local:
+            global peers
+            candidates = peers.getNotEmptySK(peers)
+            for c in candidates: # somente as chaves da DHT dos peers que foram preenchidas
+                # pesquisa se a chave prenchida é parecida com o que está sendo pesquisado
+                print(peers.h[c])
+
         return None
 
 
@@ -62,8 +77,6 @@ local_ip = '127.0.0.1'
 #init_hash = mod4md5(md5(str(gmtime()).encode()).hexdigest()[:10])
 init_hash = mod4md5(local_ip + ':' + str(sys.argv[1]))
 print("Inicializando DHT com hash: " + init_hash)
-for s in subkeys(init_hash):
-    print(s)
 dht = DHT(init_hash)
 peers = DHT(init_hash)
 
