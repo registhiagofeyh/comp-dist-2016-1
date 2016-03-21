@@ -27,8 +27,9 @@ class DHT:
         for sk in subkeys(k):
             if sk in self.h:
                 if not self.h[sk]:
-                    self.h[sk] = (k, v)
-                    return sk
+                    if self.lookup(k) == None:
+                        self.h[sk] = (k, v)
+                        return sk
         return None
 
     def lookup(self, k):
@@ -48,11 +49,13 @@ print("Inicializando DHT com hash: " + init_hash)
 dht = DHT(init_hash)
 
 @get('/dht/<key>')
+@get('/dht/<key>/')
 def dht_lookup(key):
     global dht
     return json.dumps(dht.lookup(key))
 
 @put('/dht/<key>/<value>')
+@put('/dht/<key>/<value>/')
 def dht_insert(key, value):
     global dht
     return json.dumps(dht.insert(key, value))
