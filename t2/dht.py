@@ -1,12 +1,11 @@
-from bottle import run, get, put
 import json
 import sys
+import requests
+from bottle import run, get, put, request
 from hashlib import md5
 from time import gmtime
 
-
 # BUGLIST
-# - insercao da mesma chave 2 vezes, possibilita inserir o mesmo par de chave/valer em posicoes diferentes da DHT
 # - necessario implementar comunicacao em grupo, e propagar os inserts e lookups
 
 def subkeys(k):
@@ -23,14 +22,18 @@ class DHT:
         for sk in subkeys(self.k):
             self.h[sk] = None
 
+
     def insert(self, k, v):
+        print('Tentando inserir ' + k + ': ' + v)
         for sk in subkeys(k):
             if sk in self.h:
                 if not self.h[sk]:
                     if self.lookup(k) == None:
                         self.h[sk] = (k, v)
+                        print('Inserido em [' + sk + ']')
                         return sk
         return None
+
 
     def lookup(self, k):
         for sk in subkeys(k):
@@ -41,28 +44,57 @@ class DHT:
                         return vi
         return None
 
+
     def __repr__(self):
         return "<<DHT:"+ repr(self.h) +">>"
 
-init_hash = md5(str(gmtime()).encode()).hexdigest()[:6]
+
+def mod4md5(string):
+    string = md5(string.encode()).hexdigest()
+    r = ''
+    for c in string:
+        r = r + str(ord(c) % 4)
+
+    return r
+
+
+local_ip = '127.0.0.1'
+#init_hash = mod4md5(md5(str(gmtime()).encode()).hexdigest()[:10])
+init_hash = mod4md5(local_ip + ':' + str(sys.argv[1]))
 print("Inicializando DHT com hash: " + init_hash)
+for s in subkeys(init_hash):
+    print(s)
 dht = DHT(init_hash)
+peers = DHT(init_hash)
+
+
+@put('/dht/peer/<port>')
+def add_peer(port):
+    global peers
+    remote_ip = request.environ.get('REMOTE_ADDR')
+    if (port == None): return None;
+    return json.dumps(peers.insert(mod4md5(remote_ip + ':' + str(port)),
+        'http://' + remote_ip + ':' + port))
+
 
 @get('/dht/<key>')
 @get('/dht/<key>/')
 def dht_lookup(key):
     global dht
-    return json.dumps(dht.lookup(key))
+    return json.dumps(dht.lookup(mod4md5(key)))
+
 
 @put('/dht/<key>/<value>')
 @put('/dht/<key>/<value>/')
 def dht_insert(key, value):
     global dht
-    return json.dumps(dht.insert(key, value))
+    return json.dumps(dht.insert(mod4md5(key), value))
+
 
 @get('/debug')
+@get('/debug/')
 def debug():
-    global dht
-    return dht.__repr__()
+    global dht, peers
+    return dht.__repr__() + "\n\n" + peers.__repr__()
 
-run(host='localhost', port=int(sys.argv[1]))
+run(host=local_ip, port=int(sys.argv[1]))
