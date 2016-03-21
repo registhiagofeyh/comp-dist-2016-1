@@ -33,4 +33,5 @@ As seguintes requisições foram implementadas:
 $ curl -w "\n" -X GET "http://localhost:8080/dht/abcd1234"
 $ curl -w "\n" -X PUT "http://localhost:8080/dht/abcd1234/1234"
 $ curl -w "\n" -X GET "http://localhost:8080/dht/abcd1234"
+$ curl -w "\n" -X PUT "http://localhost:8080/dht/peer/8000"
 ```
