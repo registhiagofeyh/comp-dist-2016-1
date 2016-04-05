@@ -76,9 +76,18 @@ def mod4md5(string):
     return r
 
 
+def mod2md5(string):
+    string = md5(string.encode()).hexdigest()
+    r = ''
+    for c in string:
+        r = r + str(ord(c) % 2)
+
+    return r[:5]
+
+
 local_ip = '127.0.0.1'
-#init_hash = mod4md5(md5(str(gmtime()).encode()).hexdigest()[:10])
-init_hash = mod4md5(local_ip + ':' + str(sys.argv[1]))
+#init_hash = mod2md5(md5(str(gmtime()).encode()).hexdigest()[:10])
+init_hash = mod2md5(local_ip + ':' + str(sys.argv[1]))
 print("Inicializando DHT com hash: " + init_hash)
 dht = DHT(init_hash)
 peers = DHT(init_hash)
@@ -89,7 +98,7 @@ def add_peer(port):
     global peers
     remote_ip = request.environ.get('REMOTE_ADDR')
     if (port == None): return None;
-    return json.dumps(peers.insert(mod4md5(remote_ip + ':' + str(port)),
+    return json.dumps(peers.insert(mod2md5(remote_ip + ':' + str(port)),
         'http://' + remote_ip + ':' + port))
 
 
@@ -97,14 +106,14 @@ def add_peer(port):
 @get('/dht/<key>/')
 def dht_lookup(key):
     global dht
-    return json.dumps(dht.lookup(mod4md5(key)))
+    return json.dumps(dht.lookup(mod2md5(key)))
 
 
 @put('/dht/<key>/<value>')
 @put('/dht/<key>/<value>/')
 def dht_insert(key, value):
     global dht
-    return json.dumps(dht.insert(mod4md5(key), value))
+    return json.dumps(dht.insert(mod2md5(key), value))
 
 
 @get('/debug')
