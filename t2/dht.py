@@ -40,15 +40,18 @@ class DHT:
                         self.h[sk] = (k, v)
                         print('Inserido em [' + sk + ']')
                         return sk
+                    else:
+                        return self.lookup(k, True, True)
         return None
 
 
-    def lookup(self, k, local = False):
+    def lookup(self, k, local = False, returnSk = False):
         for sk in subkeys(k):
             if sk in self.h:
                 if self.h[sk]:
                     (ki, vi) = self.h[sk]
                     if ki == k:
+                        if returnSk: return sk
                         return vi
         if not local:
             global peers
